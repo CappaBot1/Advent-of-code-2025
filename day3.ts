@@ -1,16 +1,12 @@
 const part: number = Number(Deno.args[0] || 1);
 
-const input: string[][] = Deno.readTextFileSync("input.txt")
-    .split("\n")
-    .map((line) => line.split(""));
+const input: string[] = Deno.readTextFileSync("input.txt")
+    .split("\n");
 
 const numBatteries = 12;
 
 let total = 0;
 let highest;
-
-//const thisToThatCache: Map<string, number> = new Map();
-//const encoder = new TextEncoder();
 
 for (const line of input) {
     console.log("doing line:", line);
@@ -25,42 +21,34 @@ for (const line of input) {
                 }
             }
             break;
-        case 2:
-            // EVIL CODE
-            //highest = await thisToThat(0, line.length - numBatteries, line, "");
-
+        case 2: {
+            let highStr = "";
+            let low = 0;
+            let high = line.length - numBatteries + 1;
+            while (highStr.length < numBatteries) {
+                console.log("low:", low, "high:", high);
+                const [num, index] = findBiggestNumber(line.slice(low, high).split("").map(Number))
+                highStr = highStr + num;
+                low = index + low + 1;
+                high++;
+            }
+            highest = Number(highStr);
             break;
+        }
     }
-    //await Deno.stdout.write(encoder.encode("\n"));
     console.log("highest:", highest);
     total += highest;
 }
 
-/* SO EVIL, TAKES FOREVER @ 12 BATTERIES
-async function thisToThat(start: number, end: number, line: string[], previous: string): Promise<number> {
-    const key = `${start},${end},${line.join("")},${previous}`;
-    let res = thisToThatCache.get(key);
-    if (res === undefined) {
-        //await Deno.stdout.write(encoder.encode(","));
-        if (previous.length === numBatteries) {
-            const num = parseInt(previous);
-            res = num;
-        }
-        else {
-            let highest = 0;
-            for (let i = start; i <= end; i++) {
-                const num = await thisToThat(i + 1, end + 1, line, previous + line[i]);
-                highest = Math.max(highest, num);
-            }
-            res = highest;
-        }
-        thisToThatCache.set(key, res);
-    } else {
-        //await Deno.stdout.write(encoder.encode("."));
+function findBiggestNumber(line: number[]): [number, number] {
+    console.log("finding big num in:", line.join(""));
+    for (let i = 9; i > 0; i--) {
+        const index = line.indexOf(i);
+        if (index === -1) continue;
+        console.log("found", i, "at", index);
+        return [i, index];
     }
-    return res;
+    throw "no number found";
 }
-console.log(thisToThatCache)
-*/
 
 console.log("total:", total);
