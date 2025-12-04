@@ -4,14 +4,12 @@ const input: [string, number][] = Deno.readTextFileSync("input.txt")
     .split("\n")
     .map((line) => 
         [line[0], Number(line.slice(1))]
-    )
+    );
 
 let rotation = 50;
 let count = 0;
 
 for (const [direction, number] of input) {
-    console.log("Going", number, direction);
-
     switch (part) {
         case 1:
             if (rotation == 0) {
@@ -20,33 +18,30 @@ for (const [direction, number] of input) {
 
             switch (direction) {
                 case ("L"):
-                    rotation -= number
-                    break
+                    rotation -= number;
+                    break;
                 case ("R"):
-                    rotation += number
-                    break
+                    rotation += number;
+                    break;
             }
 
             rotation = rotation % 100;
-            break
-
+            break;
         case 2:
             for (let i = 0; i < number; i++) {
                 switch (direction) {
                     case ("L"):
                         rotation--;
-                        break
+                        break;
                     case ("R"):
                         rotation++;
-                        break
+                        break;
                 }
                 rotation = rotation % 100;
                 if (rotation === 0) count++;
             }
-            break
+            break;
     }
-
-    console.log("rotation:", rotation);
 }
 
 console.log("count:", count);

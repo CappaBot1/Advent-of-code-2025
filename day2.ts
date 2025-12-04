@@ -8,8 +8,6 @@ const input: number[][] = Deno.readTextFileSync("input.txt")
         }
     );
 
-console.log(input);
-
 let total = 0;
 const invalidIDs: Set<number> = new Set();
 
@@ -48,15 +46,13 @@ for (const [lower, upper] of input) {
                     }
                 }
 
+                total = Array.from(invalidIDs)
+                    .reduce((previous, current) => previous + current, 0);
+
                 break;
             }
         }
     }
-}
-
-if (part === 2) {
-    total = Array.from(invalidIDs)
-        .reduce((previous, current) => previous + current, 0);
 }
 
 console.log("total:", total);

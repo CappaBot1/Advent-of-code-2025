@@ -9,7 +9,6 @@ let total = 0;
 let highest;
 
 for (const line of input) {
-    console.log("doing line:", line);
     highest = 0;
 
     switch (part) {
@@ -26,8 +25,11 @@ for (const line of input) {
             let low = 0;
             let high = line.length - numBatteries + 1;
             while (highStr.length < numBatteries) {
-                console.log("low:", low, "high:", high);
-                const [num, index] = findBiggestNumber(line.slice(low, high).split("").map(Number))
+                const [num, index] = findBiggestNumber(
+                    line.slice(low, high)
+                        .split("")
+                        .map(Number)
+                );
                 highStr = highStr + num;
                 low = index + low + 1;
                 high++;
@@ -36,16 +38,13 @@ for (const line of input) {
             break;
         }
     }
-    console.log("highest:", highest);
     total += highest;
 }
 
 function findBiggestNumber(line: number[]): [number, number] {
-    console.log("finding big num in:", line.join(""));
     for (let i = 9; i > 0; i--) {
         const index = line.indexOf(i);
         if (index === -1) continue;
-        console.log("found", i, "at", index);
         return [i, index];
     }
     throw "no number found";
