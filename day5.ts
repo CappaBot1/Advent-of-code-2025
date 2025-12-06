@@ -1,15 +1,3 @@
-/*
-    TODO: PART 2
-    Make a queue of ranges before
-
-    If a range passes all conflict checks,
-        add it to correct array
-    else
-        add resolutions to end of before ranges array
-
-    Exit once empty
-*/
-
 const part: number = Number(Deno.args[0] || 1);
 
 const input = Deno.readTextFileSync("input.txt").split("\n\n");
