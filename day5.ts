@@ -43,79 +43,39 @@ switch (part) {
         break;
     }
     case 2: {
-        console.error("not implemented");
-        break;
-        for (const [i, range] of ranges.entries()) {
-            const [low, high] = range;
+        const goodRanges: number[][] = [];
+        while (ranges.length > 0) {
+            const [low, high] = ranges.shift()!;
 
-            console.log("------------------");
-
-            for (const [j, realRange] of ranges.entries()) {
+            let pass = true;
+            for (const realRange of ranges) {
                 const [realLow, realHigh] = realRange;
 
-                if (i === j) continue;
+                if (low > high) throw "invalid id range";
 
-                console.log("checking:", range, "against:", realRange);
-
-                if (low > high) throw "waaaahh, i'm a crybaby";
-
-                // ( ) [ ]
-                // ( ) [ ]
-                if (high < realLow) {
-                    console.log(1);
-                }
-                // ( | ]
-                //
-                // [ ] ( )
-                // [ ] ( )
-                else if (low > realHigh) {
-                    console.log(2);
-                }
-                // (  [ ) ]
-                // (      )
-                else if (low < realLow && high >= realLow && high <= realHigh) {
-                    console.log(3);
-                    ranges.splice(i, 1);
-                    ranges.splice(j, 1);
-                    ranges.push([low, realLow-1]);
-                    break;
-                }
-                // [ ( ]  )
-                // [   ]( )
-                else if (low <= realHigh && low >= realLow && high > realHigh) {
-                    console.log(4);
-                    ranges.splice(i, 1);
-                    ranges.push([realHigh+1, high]);
-                    break;
-                }
-                // [ ( ) ]
-                // [     ]
-                else if (low >= realLow && low <= realHigh && high >= realLow && high <= realHigh) {
-                    console.log(5);
-                    ranges.splice(i, 1);
-                    break;
-                }
-                // (  [ ]  )
-                // ( )[ ]( )
-                else if (low < realLow && high > realHigh) {
-                    console.log(6);
-                    ranges.splice(i, 1);
-                    ranges.push([low, realLow-1], [realHigh+1, high]);
+                if (low === realLow && high === realHigh) {
+                    pass = false;
                     break;
                 }
 
+                if (high >= realLow - 1 || low <= realHigh + 1) {
+                    pass = false;
+                    ranges.push([Math.min(low, realLow), Math.max(high, realHigh)]);
+                    break;
+                }
                 else {
-                    throw "edging alert"
+                    throw "edge case???"
                 }
-                //await new Promise((resolve) => {setTimeout(resolve, 100)});
+            }
 
-                console.log("ranges:", ranges);
+            if (pass) {
+                goodRanges.push([low, high]);
             }
         }
 
         let total = 0;
 
-        for (const range of ranges) {
+        for (const range of goodRanges) {
             total += range[1] - range[0] + 1;
         }
 
