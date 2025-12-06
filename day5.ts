@@ -58,13 +58,11 @@ switch (part) {
                     break;
                 }
 
-                if (high >= realLow - 1 || low <= realHigh + 1) {
+                if (!(high < realLow) && !(low > realHigh)) {
+                    console.log(3);
                     pass = false;
                     ranges.push([Math.min(low, realLow), Math.max(high, realHigh)]);
                     break;
-                }
-                else {
-                    throw "edge case???"
                 }
             }
 
