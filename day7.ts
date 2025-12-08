@@ -4,12 +4,6 @@ const inputRaw: string[][] = Deno.readTextFileSync("input.txt")
     .split("\n")
     .map((line) => line.split(""));
 
-const charMap = {
-    "S": 1,
-    ".": 0,
-    "^": -1,
-}
-
 function mapCharacter(ch: string): number {
     switch (ch) {
         case "S": return 1;
@@ -18,15 +12,6 @@ function mapCharacter(ch: string): number {
         default: throw "foreign item in the bagging area";
     }
 }
-
-function unmapCharacter(n: number): string {
-    switch (n) {
-        case 0:  return ".";
-        case -1: return "^";
-        default: return String(n);
-    }
-}
-
 
 switch (part) {
     case 1: {
