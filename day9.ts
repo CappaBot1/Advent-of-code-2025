@@ -25,41 +25,50 @@ switch (part) {
         break;
     }
     case 2: {
-        throw "not implemented yet";
         const xs = input.map((x) => x[0]);
         const ys = input.map((x) => x[1]);
-
-        console.log(xs);
-        console.log(ys);
 
         const minx = Math.min(...xs);
         const maxx = Math.max(...xs);
         const miny = Math.min(...ys);
         const maxy = Math.max(...ys);
 
-        console.log(maxx);
-        console.log(maxy);
+        const validPoints: boolean[][] = new Array(maxx + 2).fill(null).map(() => new Array(maxy + 2).fill(false));
 
-        const pointsInside: Set<string> = new Set();
-
+        //console.log("calculating valid points");
         for (let y = miny; y <= maxy; y++) {
             for (let x = minx; x <= maxx; x++) {
-                if (pointInShape([x, y], input)) pointsInside.add(`${x},${y}`);
+                if (pointInShape([x, y], input)) validPoints[x][y] = true;
             }
         }
 
-        console.log(pointsInside.size);
+        /*const map = validPoints.map((line) => line.map((el) => el ? "X" : "."));
 
-        const map = new Array(maxy + 2).fill(null).map(() => new Array(maxx + 2).fill("."));
+        const trans = map[0].map((_, colIndex) =>
+            map.map(row => row[colIndex])
+        );
 
-        for (const point of pointsInside) {
-            const [x, y] = <Vector2d>point.split(",").map(Number);
-            map[y][x] = "X";
-        }
-
-        for (const row of map) {
+        for (const row of trans) {
             console.log(row.join(""));
+        }*/
+        
+        //console.log("calculating largest");
+
+        let largest = 0;
+        for (let i = 0; i < input.length - 1; i++) {
+            const a = input[i];
+            for (let j = i+1; j < input.length; j++) {
+                const b = input[j];
+
+                if (!areaValid(a, b, validPoints)) continue;
+                const area = getArea(a, b);
+                if (area > largest) {
+                    largest = area;
+                }
+            }
         }
+
+        console.log("largest area:", largest);
 
         break;
     }
@@ -104,4 +113,34 @@ function pointInShape(point: [number, number], shape: [number, number][]): boole
     }
 
     return inside;
+}
+
+function areaValid(a: Vector2d, b: Vector2d, validPoints: boolean[][]): boolean {
+    let xstart;
+    let xend;
+    let ystart;
+    let yend;
+
+    if (a[0] < b[0]) {
+        xstart = a[0];
+        xend = b[0];
+    } else {
+        xstart = b[0];
+        xend = a[0];
+    }
+    if (a[1] < b[1]) {
+        ystart = a[1];
+        yend = b[1];
+    } else {
+        ystart = b[1];
+        yend = a[1];
+    }
+
+    for (let x = xstart; x <= xend; x++) {
+        for (let y = ystart; y <= yend; y++) {
+            if (!validPoints[x][y]) return false;
+        }
+    }
+
+    return true;
 }
